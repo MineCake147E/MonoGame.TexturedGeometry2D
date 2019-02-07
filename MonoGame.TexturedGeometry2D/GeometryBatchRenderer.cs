@@ -8,69 +8,69 @@ using System.Threading.Tasks.Dataflow;
 namespace MonoGame.TexturedGeometry2D
 {
 	/// <summary>
-	/// 大幅に拡張されたSpriteBatch。
-	/// 多角形の非同期分割に対応。
-	/// Drawスレッド外でアイテムの追加処理をする必要がある。
-	/// </summary>
+	/// SpriteBatch expanded.
+	/// Support for asynchronous division of polygon.
+	/// It is necessary to add items to the outside of Draw thread.
+	/// </ summary>
 	public sealed partial class GeometryBatchRenderer : IDisposable
 	{
 		/// <summary>
-		/// ソートモード
+		/// The sort mode
 		/// </summary>
 		private SpriteSortMode _sortMode;
 
 		/// <summary>
-		/// ブレンド状態
+		/// The blend state
 		/// </summary>
 		private BlendState _blendState;
 
 		/// <summary>
-		/// サンプラー状態
+		/// The sampler state
 		/// </summary>
 		private SamplerState _samplerState;
 
 		/// <summary>
-		/// 深度/ステンシル状態
+		/// The depth stencil state
 		/// </summary>
 		private DepthStencilState _depthStencilState;
 
 		/// <summary>
-		/// ラスタライザー状態
+		/// The rasterizer state
 		/// </summary>
 		private RasterizerState _rasterizerState;
 
 		/// <summary>
-		/// エフェクトオブジェクト
+		/// effect
 		/// </summary>
 		private Effect _effect;
 
 		/// <summary>
-		/// Begin()が呼ばれたか否か
+		/// whether Begin() has been called
 		/// </summary>
 		private bool _beginCalled;
 
 		/// <summary>
-		/// デバイス
+		/// device
 		/// </summary>
 		public GraphicsDevice GraphicsDevice { get; set; }
 
 		/// <summary>
-		/// Batch規定のエフェクト
+		/// default effect
 		/// </summary>
 		private SpriteEffect _spriteEffect;
 
 		/// <summary>
-		/// 規定のエフェクトパス
+		/// default effect pass
 		/// </summary>
 		private readonly EffectPass _spritePass;
 
 		/// <summary>
-		/// 規定の変換行列
+		/// The matrix transform
 		/// </summary>
 		private readonly EffectParameter _matrixTransform;
 
 		/// <summary>
-		/// テセレータプール
+		/// The tessellator pool
 		/// </summary>
 		private TessellatorPool tessellators = new TessellatorPool();
 
@@ -94,10 +94,10 @@ namespace MonoGame.TexturedGeometry2D
 		/// Initializes a new instance of the <see cref="GeometryBatchRenderer"/> class.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device.</param>
-		/// <exception cref="ArgumentNullException">graphicsDevice - GraphicsDeviceにnullを渡さないでください。</exception>
+		/// <exception cref="ArgumentNullException">graphicsDevice - GraphicsDevice must not be null.</exception>
 		public GeometryBatchRenderer(GraphicsDevice graphicsDevice) : base()
 		{
-			GraphicsDevice = graphicsDevice ?? throw new ArgumentNullException(nameof(graphicsDevice), "GraphicsDeviceにnullを渡さないでください。");
+			GraphicsDevice = graphicsDevice ?? throw new ArgumentNullException(nameof(graphicsDevice), "GraphicsDevice must not be null.");
 
 			_spriteEffect = new SpriteEffect(graphicsDevice);
 			_spritePass = _spriteEffect.CurrentTechnique.Passes[0];
@@ -152,11 +152,11 @@ namespace MonoGame.TexturedGeometry2D
 			// Setup things now so a user can change them.
 			if (sortMode == SpriteSortMode.Immediate)
 			{
-				throw new NotSupportedException("イミディエイト描画モードには対応してゐません。");
+				throw new NotSupportedException("Immediate drawing mode is not supported.");
 			}
 			else if (sortMode == SpriteSortMode.Texture)
 			{
-				throw new NotSupportedException("テクスチャソートモードには対応してゐません。");
+				throw new NotSupportedException("Texture sort mode is not supported.");
 			}
 
 			_beginCalled = true;
@@ -275,7 +275,7 @@ namespace MonoGame.TexturedGeometry2D
 
 		#region IDisposable Support
 
-		private bool disposedValue = false; // 重複する呼び出しを検出するには
+		private bool disposedValue = false; // To detect duplicate calls
 
 		private void Dispose(bool disposing)
 		{
@@ -283,33 +283,33 @@ namespace MonoGame.TexturedGeometry2D
 			{
 				if (disposing)
 				{
-					// マネージド状態を破棄します (マネージド オブジェクト)。
+					// Discard the managed state (managed object).
 					_spriteEffect?.Dispose();
 					_spriteEffect = null;
 				}
 
-				// アンマネージド リソース (アンマネージド オブジェクト) を解放し、下のファイナライザーをオーバーライドします。
-				// 大きなフィールドを null に設定します。
+				// Release the unmanaged resource (unmanaged object) and override the finalizer below.
+				// Set the large field to null.
 				GraphicsDevice = null;
 				disposedValue = true;
 			}
 		}
 
-		// 上の Dispose(bool disposing) にアンマネージド リソースを解放するコードが含まれる場合にのみ、ファイナライザーをオーバーライドします。
-		// ~GeometryBatch() {
-		//   // このコードを変更しないでください。クリーンアップ コードを上の Dispose(bool disposing) に記述します。
-		//   Dispose(false);
-		// }
+		// Override the finalizer only if Dispose (bool disposing) above contains code to release unmanaged resources.
+		// ~ GeometryBatch () {
+		// Please do not change this code.Write the cleanup code in Dispose(bool disposing) above.
+		// Dispose (false);
+		//}
 
-		// このコードは、破棄可能なパターンを正しく実装できるように追加されました。
+		// This code has been added to correctly implement discardable patterns.
 		/// <summary>
 		/// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
 		/// </summary>
 		public void Dispose()
 		{
-			// このコードを変更しないでください。クリーンアップ コードを上の Dispose(bool disposing) に記述します。
+			// Please do not change this code. Write the cleanup code in Dispose (bool disposing) above.
 			Dispose(true);
-			// 上のファイナライザーがオーバーライドされる場合は、次の行のコメントを解除してください。
+			// If the finalizer above is overridden, uncomment the following line.
 			// GC.SuppressFinalize(this);
 		}
 

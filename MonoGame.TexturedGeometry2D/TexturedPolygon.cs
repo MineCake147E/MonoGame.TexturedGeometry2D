@@ -7,7 +7,7 @@ using System.Collections.Generic;
 namespace MonoGame.TexturedGeometry2D
 {
 	/// <summary>
-	/// テクスチャを張つた多角形の定義
+	/// Definition of textured polygon
 	/// </summary>
 	public struct TexturedPolygon : IEquatable<TexturedPolygon>, IComparable<TexturedPolygon>
 	{
